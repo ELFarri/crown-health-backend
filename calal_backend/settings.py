@@ -13,7 +13,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 SECRET_KEY = 'django-insecure-calal-secret-key-2024'
 DEBUG = True
-ALLOWED_HOSTS = ["*", "127.0.0.1", ".onrender.com"]
+ALLOWED_HOSTS = ["*", "mouatazfarri.pythonanywhere.com", "127.0.0.1", ".onrender.com"]
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -91,32 +91,41 @@ REST_FRAMEWORK = {
     ]
 }
 
-# 🔓 CORS للـ Flutter
+# 🔥 CORS pour le mobile (mouatazfarri.pythonanywhere.com)
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
-# أضف هذا في settings.py بعد CORS_ALLOW_ALL_ORIGINS = True
-
-# 🔥 CORS للـ Flutter (مهم جداً)
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:8081",  # Flutter Web
-    "http://10.0.2.2:8000",   # Flutter Android Emulator
-    "http://127.0.0.1:8000",
-    "http://localhost:8000",
-    "http://172.20.10.3:8000",
+CORS_ALLOW_METHODS = [
+    "DELETE",
+    "GET",
+    "OPTIONS",
+    "PATCH",
+    "POST",
+    "PUT",
 ]
-
-CORS_ALLOW_ALL_ORIGINS = True  # مؤقت للاختبار
-CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_HEADERS = [
+    "accept",
+    "accept-encoding",
+    "authorization",
+    "content-type",
+    "dnt",
+    "origin",
+    "user-agent",
+    "x-csrftoken",
+    "x-requested-with",
+]
 
 # 🔥 Media Files
 MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # 📁 Static Files ✅
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [BASE_DIR / 'static']
-STATIC_ROOT = BASE_DIR / 'staticfiles'
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+
+# Configuration pour PythonAnywhere (plus simple sans WhiteNoise si possible, mais on le garde en backup)
+# STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
 
 # JWT Token
 SIMPLE_JWT = {
