@@ -67,30 +67,13 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'calal_backend.wsgi.application'
 
-# 🔥 DATABASE CONFIGURATION (Hybrid MySQL/SQLite)
-try:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.mysql',
-            'NAME': 'calal_db',
-            'USER': 'root',
-            'PASSWORD': '123',           # ← كلمة المرور بتاعتك
-            'HOST': '127.0.0.1',
-            'PORT': '3306',
-            'OPTIONS': {
-                'charset': 'utf8mb4',
-                'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
-            }
-        }
+# 🔥 DATABASE CONFIGURATION (SQLite for Cloud Stability)
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
-    # Test connection (optional, but good for fallback logic if needed)
-except Exception:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
-        }
-    }
+}
 
 # 👤 Custom User Model
 AUTH_USER_MODEL = 'users.CustomUser'
