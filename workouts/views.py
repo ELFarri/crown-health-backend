@@ -3,6 +3,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from .models import Workout, UserWorkout
 from .serializers import WorkoutSerializer, UserWorkoutSerializer
+import datetime
 
 @api_view(['GET'])
 def workouts_list(request):
@@ -14,7 +15,16 @@ def workouts_list(request):
 @permission_classes([IsAuthenticated])
 def user_workout_history(request):
     if request.method == 'GET':
-        history = UserWorkout.objects.filter(user=request.user).order_by('-date')
+        # BUG FIX: support optional ?date=YYYY-MM-DD filter for per-day stats
+        date_param = request.GET.get('date', None)
+        qs = UserWorkout.objects.filter(user=request.user)
+        if date_param:
+            try:
+                target_date = datetime.date.fromisoformat(date_param)
+                qs = qs.filter(date=target_date)
+            except ValueError:
+                return Response({'error': 'Invalid date format. Use YYYY-MM-DD.'}, status=400)
+        history = qs.order_by('-date')
         serializer = UserWorkoutSerializer(history, many=True)
         return Response(serializer.data)
         

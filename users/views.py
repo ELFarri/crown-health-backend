@@ -40,9 +40,15 @@ def login_api(request):
         })
     return Response({"error": "Invalid credentials"}, status=401)
 
-@api_view(['GET'])
+@api_view(['GET', 'PUT', 'PATCH'])
 @permission_classes([IsAuthenticated])
 def profile_api(request):
     user = request.user
+    if request.method in ['PUT', 'PATCH']:
+        serializer = CustomUserSerializer(user, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=400)
     serializer = CustomUserSerializer(user)
     return Response(serializer.data)

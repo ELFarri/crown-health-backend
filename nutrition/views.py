@@ -5,11 +5,23 @@ from rest_framework.response import Response
 from .models import Meal
 from .serializers import MealSerializer
 from users.models import CustomUser
+from django.utils import timezone
+import datetime
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def meals_list(request):
-    meals = Meal.objects.filter(user=request.user)
+    # BUG FIX: filter by date (default = today, optional ?date=YYYY-MM-DD param)
+    date_param = request.GET.get('date', None)
+    if date_param:
+        try:
+            target_date = datetime.date.fromisoformat(date_param)
+        except ValueError:
+            return Response({'error': 'Invalid date format. Use YYYY-MM-DD.'}, status=400)
+    else:
+        target_date = timezone.now().date()
+
+    meals = Meal.objects.filter(user=request.user, date=target_date)
     serializer = MealSerializer(meals, many=True)
     return Response(serializer.data)
 
