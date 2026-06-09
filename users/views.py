@@ -173,3 +173,21 @@ def profile_api(request):
     # Default branch: GET request → serialize and return the current user's profile
     serializer = CustomUserSerializer(user)
     return Response(serializer.data)   # Returns HTTP 200 OK with user data as JSON
+
+
+# ===================================================================================================================
+# ENDPOINT 4: GET /api/users/config/
+# PURPOSE: Fetches configuration constants securely (such as the Gemini API Key) from the server environment.
+# ACCESS: Protected — requires a valid JWT access token
+# RESPONSE (success - HTTP 200 OK):
+#   { "gemini_api_key": "..." }
+# ===================================================================================================================
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def config_api(request):
+    import os
+    # Read the Gemini key from the environment variables (no hardcoded secrets in codebase)
+    api_key = os.environ.get('GEMINI_API_KEY', '')
+    return Response({
+        "gemini_api_key": api_key
+    })

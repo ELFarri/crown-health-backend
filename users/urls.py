@@ -36,4 +36,9 @@ urlpatterns = [
     # Requires Authorization: Bearer <access_token> header (IsAuthenticated permission)
     # name='profile' → used for reverse URL resolution
     path('profile/', views.profile_api, name='profile'),
+
+    # GET /api/users/config/
+    # Calls views.config_api — retrieves security config (like Gemini API key)
+    # Requires Authorization: Bearer <access_token> header
+    path('config/', views.config_api, name='config'),
 ]
